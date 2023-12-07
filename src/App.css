@@ -1,0 +1,74 @@
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+}
+
+input {
+  flex: auto;
+}
+
+label {
+  flex: auto;
+  text-align: right;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.columns,
+.rows {
+  display: flex;
+  flex: auto;
+}
+.columns {
+  flex-direction: column;
+}
+.gap {
+  gap: 1em;
+}
+.pad {
+  padding: 1em;
+}
+.paper {
+  background-color: black;
+}
+
+textarea {
+  padding: 1em;
+  width: 100%;
+  height: 10em;
+  resize: vertical;
+}
+
+button {
+  padding: 1em;
+  margin: 0.5em;
+  background: red;
+  border: none;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.link,
+.link-active {
+  color: inherit;
+  text-decoration: inherit;
+  border: solid 1px red;
+  padding: 1em;
+  display: block;
+}
+.link-active {
+  background: red;
+}
