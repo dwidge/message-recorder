@@ -3,7 +3,12 @@ import { sleep } from "./sleep";
 
 export const makeMessagesVideo = async (
   textArray: string[],
-  { width = 1024, height = 960, fps = 24 } = {}
+  {
+    width = 1024,
+    height = 960,
+    fps = 24,
+    type = "video/webm; codecs=h264",
+  } = {}
 ) => {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -19,7 +24,7 @@ export const makeMessagesVideo = async (
         await sleep(1000);
       }
     },
-    { fps }
+    { fps, type }
   );
 };
 
