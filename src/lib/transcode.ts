@@ -28,7 +28,11 @@ export const transcode = async (input: string | Blob | File) => {
   const ffmpeg = await load();
   console.log("load1");
   await ffmpeg.writeFile("input.webm", await fetchFile(input));
-  await ffmpeg.exec(["-i", "input.webm", "output.mp4"]);
+  await ffmpeg.exec(
+    "-i input.webm -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p -ac 2 output.mp4".split(
+      " "
+    )
+  );
   console.log("exec1");
   const data = await ffmpeg.readFile("output.mp4");
   console.log("data1");
