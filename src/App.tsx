@@ -3,6 +3,7 @@ import { downloadBlob } from "./lib/downloadBlob";
 import { makeMessagesVideo } from "./lib/makeMessagesVideo";
 import { transcode } from "./lib/transcode";
 import { getMimeExtension } from "./lib/getMimeExtension";
+import { UpdateNotification } from "./components/UpdateNotification";
 
 export const App: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -21,6 +22,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex vertical">
+      <UpdateNotification />
       <h1>Record Messages</h1>
       <textarea
         id="textArray"

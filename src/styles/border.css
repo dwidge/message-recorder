@@ -1,0 +1,6 @@
+.border {
+  border: solid 4px yellow;
+}
+.rounded {
+  border-radius: 1em;
+}

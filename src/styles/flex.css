@@ -1,0 +1,40 @@
+.flex {
+  display: flex;
+  flex: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.vertical,
+.horizontal {
+  display: flex;
+  flex: auto;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gap {
+  gap: 1em;
+}
+
+.pad {
+  padding: 1em;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
