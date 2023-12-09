@@ -24,12 +24,12 @@ label {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-.columns,
-.rows {
+.vertical,
+.horizontal {
   display: flex;
   flex: auto;
 }
-.columns {
+.vertical {
   flex-direction: column;
 }
 .gap {
@@ -71,4 +71,33 @@ nav {
 }
 .link-active {
   background: red;
+}
+
+.flex {
+  display: flex;
+  flex: auto;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fill0 {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.fill100 {
+  height: 100%;
+  width: 100%;
+}
+
+.border {
+  border: solid 4px yellow;
 }

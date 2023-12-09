@@ -11,6 +11,16 @@ export default defineConfig(({ command, mode }) => {
     test: {
       environment: "happy-dom",
     },
+    optimizeDeps: {
+      exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
+    },
+    server: {
+      headers: {
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Content-Security-Policy": `media-src 'self' data: blob: *`,
+      },
+    },
     plugins: [
       react(),
       VitePWA({

@@ -1,22 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { downloadBlob } from "./lib/downloadBlob";
 import { makeMessagesVideo } from "./lib/makeMessagesVideo";
-import { supportedVideoTypes } from "@dwidge/media-recorder-types";
-
-const getMimeExtension = (mime: string) =>
-  [
-    ["webm", "webm"],
-    ["matroska", "mkv"],
-    ["mp4", "mp4"],
-  ].find(([pat]) => mime.includes(pat))?.[1];
+import { transcode } from "./lib/transcode";
+import { getMimeExtension } from "./lib/getMimeExtension";
 
 export const App: React.FC = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [textArray, setTextArray] = useState<string[]>([]);
+  const [originalBlob, setOriginalBlob] = useState<Blob | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
-  const [videoType, setVideoType] = useState<string>(supportedVideoTypes[0]);
+
+  useEffect(() => {
+    setVideoBlob(originalBlob);
+  }, [originalBlob]);
+
+  useEffect(() => {
+    if (videoBlob && videoRef.current)
+      videoRef.current.src = URL.createObjectURL(videoBlob);
+  }, [videoBlob]);
 
   return (
-    <div>
+    <div className="flex vertical">
       <h1>Record Messages</h1>
       <textarea
         id="textArray"
@@ -29,32 +33,51 @@ export const App: React.FC = () => {
       />
       <br />
       <button
-        onClick={() => {
-          setVideoBlob(null);
-          makeMessagesVideo(textArray, { type: videoType }).then(setVideoBlob);
+        onClick={async () => {
+          setOriginalBlob(null);
+          const blob = await makeMessagesVideo(textArray);
+          setOriginalBlob(blob);
         }}
       >
         Generate Video
       </button>
-      <button
-        onClick={() =>
-          videoBlob &&
-          downloadBlob(
-            videoBlob,
-            "record-messages." + (getMimeExtension(videoType) ?? "webm")
-          )
-        }
-        disabled={!videoBlob}
-      >
-        Download Video
-      </button>
-      <select value={videoType} onChange={(e) => setVideoType(e.target.value)}>
-        {supportedVideoTypes.map((type) => (
-          <option>{type}</option>
-        ))}
-      </select>
-      <h2>Supported types</h2>
-      <textarea>{supportedVideoTypes.join("\n")}</textarea>
+      <div className="horizontal">
+        {originalBlob && (
+          <button
+            className={videoBlob?.type.includes("webm") ? "border" : ""}
+            onClick={() => setVideoBlob(originalBlob)}
+          >
+            WEBM
+          </button>
+        )}
+        {originalBlob && (
+          <button
+            className={videoBlob?.type.includes("mp4") ? "border" : ""}
+            onClick={() => transcode(originalBlob).then(setVideoBlob)}
+          >
+            MP4
+          </button>
+        )}
+      </div>
+      {videoBlob && <DownloadBlobButton {...{ videoBlob }} />}
+      {videoBlob && <video className="fill100" ref={videoRef} controls></video>}
     </div>
   );
 };
+
+function DownloadBlobButton({ videoBlob }: { videoBlob: Blob | null }) {
+  return (
+    <button
+      onClick={() =>
+        videoBlob &&
+        downloadBlob(
+          videoBlob,
+          "record-messages." + (getMimeExtension(videoBlob?.type) ?? "webm")
+        )
+      }
+      disabled={!videoBlob}
+    >
+      Download Video
+    </button>
+  );
+}
