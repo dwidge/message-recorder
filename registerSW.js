@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/message-recorder/sw.js', { scope: '/message-recorder/' })})}
