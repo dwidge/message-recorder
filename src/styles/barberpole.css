@@ -1,0 +1,17 @@
+.barberpole {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 1em,
+    color-mix(in srgb, white 30%, transparent) 1em,
+    color-mix(in srgb, white 30%, transparent) 2em
+  );
+  background-size: 200% 200%;
+  animation: barberpole 1s linear infinite;
+}
+
+@keyframes barberpole {
+  0% {
+    background-position: -1em -2em;
+  }
+}

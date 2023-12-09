@@ -1,8 +1,11 @@
+import "./App.css";
+import "./styles/barberpole.css";
 import React, { useEffect, useRef, useState } from "react";
 import { downloadBlob } from "./lib/downloadBlob";
 import { makeMessagesVideo } from "./lib/makeMessagesVideo";
 import { transcode } from "./lib/transcode";
 import { getMimeExtension } from "./lib/getMimeExtension";
+import { Loader } from "./components/Loader";
 import { UpdateNotification } from "./components/UpdateNotification";
 
 export const App: React.FC = () => {
@@ -33,16 +36,22 @@ export const App: React.FC = () => {
         rows={10}
         cols={50}
       />
-      <br />
-      <button
-        onClick={async () => {
-          setOriginalBlob(null);
-          const blob = await makeMessagesVideo(textArray);
-          setOriginalBlob(blob);
-        }}
-      >
-        Generate Video
-      </button>
+      <Loader>
+        {(loading, setLoading) => (
+          <button
+            className={loading ? "barberpole" : ""}
+            onClick={async () => {
+              setLoading(true);
+              setOriginalBlob(null);
+              const blob = await makeMessagesVideo(textArray);
+              setOriginalBlob(blob);
+              setLoading(false);
+            }}
+          >
+            Generate Video
+          </button>
+        )}
+      </Loader>
       <div className="horizontal">
         {originalBlob && (
           <button
@@ -53,12 +62,24 @@ export const App: React.FC = () => {
           </button>
         )}
         {originalBlob && (
-          <button
-            className={videoBlob?.type.includes("mp4") ? "border" : ""}
-            onClick={() => transcode(originalBlob).then(setVideoBlob)}
-          >
-            MP4
-          </button>
+          <Loader>
+            {(loading, setLoading) => (
+              <button
+                className={
+                  (loading ? "barberpole" : "") +
+                  " " +
+                  (videoBlob?.type.includes("mp4") ? "border" : "")
+                }
+                onClick={async () => {
+                  setLoading(true);
+                  await transcode(originalBlob).then(setVideoBlob);
+                  setLoading(false);
+                }}
+              >
+                MP4
+              </button>
+            )}
+          </Loader>
         )}
       </div>
       {videoBlob && <DownloadBlobButton {...{ videoBlob }} />}
