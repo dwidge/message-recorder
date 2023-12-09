@@ -38,7 +38,7 @@ export const App: React.FC = () => {
       }
     >
       <UpdateNotification />
-      <h1>Record Messages</h1>
+      <h1>{import.meta.env.VITE_TITLE}</h1>
       <textarea
         id="textArray"
         placeholder="Enter text lines separated by new lines"
