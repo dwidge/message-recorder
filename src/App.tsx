@@ -7,10 +7,17 @@ import { transcode } from "./lib/transcode";
 import { getMimeExtension } from "./lib/getMimeExtension";
 import { Loader } from "./components/Loader";
 import { UpdateNotification } from "./components/UpdateNotification";
+import { sentenceCase } from "change-case";
 
 export const App: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [textArray, setTextArray] = useState<string[]>([]);
+  const [videoConfig, setVideoConfig] = useState({
+    fps: 30,
+    width: 640 * 2,
+    height: 480 * 2,
+    delayMilliseconds: 1500,
+  });
   const [originalBlob, setOriginalBlob] = useState<Blob | null>(null);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
 
@@ -41,6 +48,21 @@ export const App: React.FC = () => {
         rows={10}
         cols={50}
       />
+      <form action="">
+        {Object.entries(videoConfig).map(([k, v]) => (
+          <>
+            <label htmlFor={k}>{sentenceCase(k)}</label>
+            <input
+              key={k}
+              id={k}
+              value={v}
+              onChange={(e) =>
+                setVideoConfig({ ...videoConfig, [k]: e.target.value })
+              }
+            />
+          </>
+        ))}
+      </form>
       <Loader>
         {(loading, setLoading) => (
           <button
@@ -48,7 +70,7 @@ export const App: React.FC = () => {
             onClick={async () => {
               setLoading(true);
               setOriginalBlob(null);
-              const blob = await makeMessagesVideo(textArray);
+              const blob = await makeMessagesVideo(textArray, videoConfig);
               setOriginalBlob(blob);
               setLoading(false);
             }}
