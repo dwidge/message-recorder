@@ -7,6 +7,7 @@ export const makeMessagesVideo = async (
     width = 1024,
     height = 960,
     fps = 24,
+    delayMilliseconds = 1500,
     type = "video/webm; codecs=h264",
   } = {}
 ) => {
@@ -21,7 +22,7 @@ export const makeMessagesVideo = async (
     async () => {
       for (const text of textArray) {
         renderFrame(ctx, text);
-        await sleep(1000);
+        await sleep(delayMilliseconds);
       }
     },
     { fps, type }
