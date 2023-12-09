@@ -1,6 +1,6 @@
 import "./App.css";
 import "./styles/barberpole.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { downloadBlob } from "./lib/downloadBlob";
 import { makeMessagesVideo } from "./lib/makeMessagesVideo";
 import { transcode } from "./lib/transcode";
@@ -24,7 +24,12 @@ export const App: React.FC = () => {
   }, [videoBlob]);
 
   return (
-    <div className="flex vertical">
+    <div
+      className="flex vertical gap"
+      style={
+        { "--theme-color": import.meta.env.VITE_THEME_COLOR } as CSSProperties
+      }
+    >
       <UpdateNotification />
       <h1>Record Messages</h1>
       <textarea
