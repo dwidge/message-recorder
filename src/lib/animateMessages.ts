@@ -1,32 +1,19 @@
-import { recordCanvas } from "./recordCanvas";
 import { sleep } from "./sleep";
 
-export const makeMessagesVideo = async (
+export const animateMessages = async (
+  canvas: HTMLCanvasElement,
   textArray: string[],
-  {
-    width = 1024,
-    height = 960,
-    fps = 24,
-    delayMilliseconds = 1500,
-    type = "video/webm; codecs=h264",
-  } = {}
+  { width = 1024, height = 960, delayMilliseconds = 1500 } = {}
 ) => {
-  const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error();
 
-  return recordCanvas(
-    canvas,
-    async () => {
-      for (const text of textArray) {
-        renderFrame(ctx, text);
-        await sleep(delayMilliseconds);
-      }
-    },
-    { fps, type }
-  );
+  for (const text of textArray) {
+    renderFrame(ctx, text);
+    await sleep(delayMilliseconds);
+  }
 };
 
 const renderFrame = (ctx: CanvasRenderingContext2D, text: string) => {

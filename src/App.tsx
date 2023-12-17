@@ -2,15 +2,18 @@ import "./App.css";
 import "./styles/barberpole.css";
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { downloadBlob } from "./lib/downloadBlob";
-import { makeMessagesVideo } from "./lib/makeMessagesVideo";
 import { transcode } from "./lib/transcode";
 import { getMimeExtension } from "./lib/getMimeExtension";
 import { Loader } from "./components/Loader";
 import { UpdateNotification } from "./components/UpdateNotification";
 import { sentenceCase } from "change-case";
+import { animateMessages } from "./lib/animateMessages";
+import { recordCanvas } from "./lib/recordCanvas";
 
 export const App: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const [textArray, setTextArray] = useState<string[]>([]);
   const [videoConfig, setVideoConfig] = useState({
     fps: 30,
@@ -68,9 +71,34 @@ export const App: React.FC = () => {
           <button
             className={loading ? "barberpole" : ""}
             onClick={async () => {
+              const canvas = canvasRef.current;
+              if (!canvas) throw new Error("AppE1: No canvas");
+              setLoading(true);
+              canvas.hidden = false;
+              await animateMessages(canvasRef.current, textArray, videoConfig);
+              canvas.hidden = true;
+              setLoading(false);
+            }}
+          >
+            Preview
+          </button>
+        )}
+      </Loader>
+      <canvas ref={canvasRef} hidden={true} className="fill100" />
+      <Loader>
+        {(loading, setLoading) => (
+          <button
+            className={loading ? "barberpole" : ""}
+            onClick={async () => {
+              const canvas = canvasRef.current;
+              if (!canvas) throw new Error("AppE1: No canvas");
               setLoading(true);
               setOriginalBlob(null);
-              const blob = await makeMessagesVideo(textArray, videoConfig);
+              const blob = await recordCanvas(
+                canvas,
+                () => animateMessages(canvas, textArray, videoConfig),
+                videoConfig
+              );
               setOriginalBlob(blob);
               setLoading(false);
             }}
